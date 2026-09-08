@@ -125,6 +125,18 @@ mit Intel i7-6700, 32-GB-RAM-Klasse und einer NVIDIA GeForce RTX 2060 mit
 12.288 MiB VRAM. Elf von zwölf Modellversuchen liefern auswertbare 64k-Tracks;
 ein Modell endet nachvollziehbar im Preflight-Timeout.
 
+Ergänzend wurden 2.364 Records aus 14 Modellversuchen mit 64k-Kontext auf dem
+CPU-Host ausgewertet. Das Ergebnis ist methodisch wichtiger als eine weitere
+Rangliste: Jeder auswertbare 64k-CPU-Track hatte mindestens einen realen
+Kapazitätsfehler. Gute Teil-Scores änderten daran nichts; das
+`max_capacity_failures`-Gate schloss alle Tracks aus. Besonders deutlich war
+ein großer Coding-Track, der nach einer Runtime-Trennung fast vollständig die
+Verbindung verlor.
+
+Auf der 12-GB-GPU zeigte ein zusätzlicher fehlerfreier Vergleich über 776
+Records ein anderes Bild: Gemma 4 E4B und Qwen 3.5 9B blieben zwischen 32k und
+64k fachlich stabil.
+
 Die drei besten Zielwerte je Profil:
 
 | Profil | Platz 1 | Platz 2 | Platz 3 |
@@ -141,7 +153,9 @@ Interactive-Profil mit TTFT-Werten deutlich unter dem CPU-Niveau.
 
 Die Grenzwerte wurden auch nach dem GPU-Lauf nicht gelockert. Die Profile
 trennen die Betriebsmodi praktisch wie vorgesehen: CPU-Always-on,
-interaktionsschnelle GPU-Nutzung und kapazitätsbewusste Modellauswahl.
+interaktionsschnelle GPU-Nutzung und kapazitätsbewusste Modellauswahl. Die
+CPU-64k-Erweiterung bestätigt außerdem, warum ein Kapazitätsfehler nicht durch
+einen hohen Qualitätsscore kompensiert werden darf.
 
 ## Was ich aus dem Experiment mitnehme
 
