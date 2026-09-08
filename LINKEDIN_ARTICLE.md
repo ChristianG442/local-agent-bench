@@ -90,7 +90,7 @@ Echte Fehler bleiben echte Fehler. Wenn `memory_set` oder `memory_get` nicht
 aufgerufen wurde, kann eine sprachliche Behauptung den fehlenden Tool Call
 nicht ersetzen.
 
-## Erste reale CPU-Ergebnisse
+## Reale Ergebnisse auf CPU und 12-GB-GPU
 
 Eine vollständige Baseline wurde auf einem anonymisierten CPU-Referenzhost
 ausgeführt:
@@ -120,10 +120,28 @@ Always-on-Betrieb geeignet und für eine interaktive Nutzung zu langsam sein.
 Genau deshalb werden Qualitäts-, Latenz- und Ressourcenziele nicht zu einer
 einzigen universellen Rangliste vermischt.
 
-Die Grenzwerte wurden nach diesem Lauf nicht gelockert. Das Interactive-Gate
-trennt den langsamen CPU-Track wie vorgesehen. Eine vollständige reale
-12-GB-GPU-Baseline steht noch aus; bis dahin wäre eine plattformübergreifende
-Kalibrierung verfrüht.
+Die zweite Baseline umfasst 2.095 valide Records von einem anonymisierten Host
+mit Intel i7-6700, 32-GB-RAM-Klasse und einer NVIDIA GeForce RTX 2060 mit
+12.288 MiB VRAM. Elf von zwölf Modellversuchen liefern auswertbare 64k-Tracks;
+ein Modell endet nachvollziehbar im Preflight-Timeout.
+
+Die drei besten Zielwerte je Profil:
+
+| Profil | Platz 1 | Platz 2 | Platz 3 |
+|---|---|---|---|
+| Quality First | Gemma 4 E4B: 95 % | Gemma 4 12B: 91 % | Qwen 3 14B: 89 % |
+| Interactive | Gemma 4 E4B: 97 % | Qwen 3 8B: 93 % | Qwen 3.5 9B: 90 % |
+| Resource Constrained | Gemma 4 E4B: 96 % | Gemma 4 12B: 94 % | Qwen 3.5 9B: 93 % |
+
+Der höchste gemessene VRAM-Peak lag bei 10.974 MiB. Große Modellgewichte
+wurden im ressourcenbegrenzten Profil wie vorgesehen ausgeschlossen.
+`qwen3.5:27b` scheiterte zusätzlich an einem 18.075-MiB-RAM-Peak und an
+kritischen Hermes-Fehlern. Dagegen bestanden mehrere kompaktere GPU-Tracks das
+Interactive-Profil mit TTFT-Werten deutlich unter dem CPU-Niveau.
+
+Die Grenzwerte wurden auch nach dem GPU-Lauf nicht gelockert. Die Profile
+trennen die Betriebsmodi praktisch wie vorgesehen: CPU-Always-on,
+interaktionsschnelle GPU-Nutzung und kapazitätsbewusste Modellauswahl.
 
 ## Was ich aus dem Experiment mitnehme
 
@@ -178,8 +196,9 @@ Mich interessiert besonders:
 - Wie sollten Tool-Restraint und sichere Rückfragen gewichtet werden?
 - Welche lokalen Modelle halten mehrstufige Tool-Loops zuverlässig durch?
 
-Der nächste belastbare Meilenstein ist der Vergleich mit einer realen
-12-GB-NVIDIA-Baseline.
+Der nächste methodische Schritt sind Wiederholungsläufe auf weiteren Hosts und
+mit zusätzlichen Quantisierungen, damit aus der belastbaren Zwei-Host-
+Kalibrierung keine vorschnelle allgemeine Modellrangliste wird.
 
 ---
 
