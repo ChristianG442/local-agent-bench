@@ -588,20 +588,20 @@ und `qwen3.5:4b` Q4_K_M vor. Der ausgewertete Track umfasst 101 Records bei
 entstehen reproduzierbar durch die Profilkombination `smoke` plus `german`:
 Der erste deutsche Fall wird als Smoke-Test zusätzlich ausgeführt.
 
-Die unveränderten Rohdaten ergeben mit Benchmark 0.2.0 und
+Die unveränderten Rohdaten ergeben mit Benchmark 0.3.1 und
 `--re-evaluate`:
 
 | Zielprofil | Zielscore | Qualität | Hard Gates |
 |---|---:|---:|---|
-| `quality-first` | 76 % | 80 % | OK |
-| `interactive` | 55 % | 80 % | ausgeschlossen: `max_ttft_seconds` |
-| `resource-constrained` | 85 % | 80 % | OK; VRAM auf CPU `not_applicable` |
+| `quality-first` | 75 % | 80 % | OK |
+| `interactive` | 54 % | 80 % | ausgeschlossen: `max_ttft_seconds` |
+| `resource-constrained` | 84 % | 80 % | OK; VRAM auf CPU `not_applicable` |
 
 Die fünf zuvor gemeldeten kritischen Hermes-Fehler fallen auf null, weil die
 Prompt-Injection-Fixture nach falscher Tool-Auswahl nicht erreicht wurde und
 daher keine Security-Boundary-Verletzung beobachtet wurde. Die Tool-Auswahl
 bleibt negativ. Der deutsche Score steigt durch die deterministische
-Semantikprüfung auf 71 %, der Hermes-Score auf 87 %; der echte VAT-Fehler, die
+Semantikprüfung auf 71 %, der Hermes-Score auf 85 %; der echte VAT-Fehler, die
 fehlende Termin-Klärung, die falsche Abschlussbehauptung nach dem Terminal-
 Korrekturversuch und die Long-Context-Faktverschiebung bleiben negativ.
 
@@ -618,19 +618,55 @@ solange ihre Fixture das Modell nicht erreicht. Da für diese Nachprüfung keine
 neue vollständige Host-JSONL vorliegt, werden daraus weder synthetische Scores
 noch geänderte Profilgrenzen abgeleitet.
 
-**Kalibrierungsentscheidung:** Die Messung belegt, dass das
-`interactive`-TTFT-Gate den langsamen CPU-Track wie vorgesehen trennt. Es gibt
-keine Evidenz für eine Lockerung. Die Zielwerte und Hard-Gate-Grenzen aller
-drei Zielprofile bleiben unverändert, bis zusätzlich eine vollständige reale
-12-GB-GPU-Baseline vorliegt. Die Änderungen bis Benchmark 0.3.1 korrigieren
-ausschließlich Bewertungs-, Loop- und Applicability-Regeln; sie passen keine
-Grenze an das getestete Modell an.
+**GPU-Messstatus 2026-09-08:** Die vollständige reale GPU-Baseline umfasst
+2.095 valide JSONL-Records von einem anonymisierten Host mit Intel i7-6700,
+32-GB-RAM-Klasse, NVIDIA GeForce RTX 2060 mit 12.288 MiB VRAM und Ollama
+0.32.14. Gemessen wurden zwölf Modellversuche mit 65.536 Kontexttokens,
+KV-Cache `f16` und `think=false`. Elf Modelle liefern auswertbare Tracks.
+`qwen3.5:35b-a3b` erzeugt ausschließlich einen echten
+`PreflightTimeout`-Record. `ministral-3:14b` und `qwen3-coder:30b` enden nach
+der vorgesehenen adaptiven Hermes-Regel früher; ihre Dateien sind nicht
+abgeschnitten. Alle 2.094 Inferenzrecords enthalten RAM- und VRAM-Telemetrie.
+Der beobachtete VRAM-Peak liegt je nach Modell zwischen 5.210 und 10.974 MiB.
 
-Die veröffentlichten CPU-Werte stammen ausschließlich aus einer realen,
-unveränderten Host-Messung und nicht aus synthetischen oder umetikettierten
-Ergebnissen. Eine als „12-GB-GPU“ etikettierte Messdatei wird weiterhin erst
-nach dem Lauf auf diesem Host dokumentiert. Andernfalls würden solche Dateien
-Ergebnisse eines anderen Hosts als reale Baselines ausgeben.
+Die unveränderten GPU-Rohdaten ergeben mit Benchmark 0.3.1 und
+`--re-evaluate`:
+
+| Modell | Quality-first | Interactive | Resource-constrained | Ausschlussgrund |
+|---|---:|---:|---:|---|
+| `gemma4:e4b` | 95 % | 97 % | 96 % | – |
+| `gemma4:12b` | 91 % | 87 % | 94 % | – |
+| `qwen3:14b` | 89 % | 69 % | 91 % | – |
+| `qwen3:8b` | 89 % | 93 % | 91 % | – |
+| `qwen3-coder:30b` | 88 % | 84 % | 86 % | Resource: Modellgröße |
+| `qwen3.5:9b` | 87 % | 90 % | 93 % | – |
+| `granite4:7b-a1b-h` | 84 % | 89 % | 92 % | – |
+| `ministral-3:14b` | 83 % | 65 % | 87 % | Interactive: Hermes-Mindestscore |
+| `lfm2:24b-a2b` | 79 % | 86 % | 82 % | Resource: Modellgröße |
+| `gpt-oss:20b` | 77 % | 77 % | 81 % | Resource: Modellgröße |
+| `qwen3.5:27b` | 81 % | 55 % | 67 % | kritische Hermes-Fehler; Interactive zusätzlich TTFT; Resource zusätzlich RAM und Modellgröße |
+| `qwen3.5:35b-a3b` | 2 % | 0 % | 7 % | Preflight-Timeout, Pflichtsuiten fehlen |
+
+**Kalibrierungsentscheidung:** Die zwei realen Hosts belegen die gewünschte
+Trennung ohne Änderung der Ausgangswerte:
+
+- `quality-first` priorisiert Qualität und lässt auch langsamere, aber
+  fachlich starke GPU-Tracks zu. Tatsächlich beobachtete kritische
+  Hermes-Fehler bleiben ein harter Ausschluss.
+- `interactive` schließt den CPU-Track über `max_ttft_seconds` aus, während
+  geeignete GPU-Tracks das Profil bestehen. Der Hermes-Mindestscore verhindert,
+  dass reine Geschwindigkeit fachliche Agentenschwächen verdeckt.
+- `resource-constrained` lässt den kleinen CPU-Track zu und trennt auf der GPU
+  Modelle oberhalb von 12.288 MiB Gewichtsgröße. Der gemessene
+  18.075-MiB-RAM-Peak von `qwen3.5:27b` bestätigt zusätzlich das RAM-Gate.
+  VRAM bleibt auf CPU `not_applicable`; auf der 12-GB-GPU liegt der höchste
+  beobachtete Peak mit 10.974 MiB unter dem 11.264-MiB-Gate.
+
+Kein geeigneter Track wird allein durch einen unbelegten Grenzwert
+ausgeschlossen, und eine Lockerung würde die beabsichtigte Modustrennung
+schwächen. Deshalb bleiben Zielwerte und Hard Gates aller drei Profile
+unverändert. Die Rohdateien beider Hosts bleiben unverändert und werden nicht
+synthetisch ergänzt oder zwischen Hosts umetikettiert.
 
 ## Intelligentes Nachladen statt Brute Force
 
