@@ -183,7 +183,7 @@ Der nächste belastbare Meilenstein ist der Vergleich mit einer realen
 
 ---
 
-**Projekt und Methodendokumentation:**  
+**Projekt und Methodendokumentation:**
 https://github.com/ChristianG442/local-agent-bench
 
 **Lizenz:** Apache License 2.0
