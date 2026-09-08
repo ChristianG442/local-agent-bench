@@ -1,0 +1,30 @@
+name = "interactive"
+required_quality_suites = ["german", "tools", "hermes_agent", "long_context"]
+
+[weights]
+quality = 0.55
+generation_tokens_per_second = 0.20
+ttft_seconds = 0.15
+wall_seconds = 0.10
+ram_peak_mib = 0.0
+vram_peak_mib = 0.0
+model_size_mib = 0.0
+
+[quality]
+german = 0.35
+tools = 0.25
+hermes_agent = 0.35
+long_context = 0.05
+
+[targets]
+generation_tokens_per_second = 40.0
+ttft_seconds = 1.0
+wall_seconds = 5.0
+
+[gates]
+min_quality_score = 0.70
+min_hermes_agent_score = 0.75
+max_hermes_critical_failures = 0
+max_ttft_seconds = 3.0
+max_wall_seconds = 30.0
+max_capacity_failures = 0

@@ -1,0 +1,172 @@
+# Öffentlich gepflegter Kandidatenkatalog. Größen sind Planungswerte, keine
+# Garantie für den finalen VRAM-Bedarf. Der Runner misst die Realität.
+
+[candidates."qwen3.5:4b"]
+display_name = "Qwen3.5 4B"
+estimated_weight_gb = 3.2
+min_context = 32768
+german = true
+tools = true
+roles = ["baseline", "small", "german"]
+cpu_stage = 1
+gpu_stage = 2
+cpu_priority = 10
+gpu_priority = 200
+source = "https://ollama.com/library/qwen3.5"
+notes = "Kleiner Allrounder für den CPU-Host."
+
+[candidates."qwen3:4b"]
+display_name = "Qwen3 4B"
+estimated_weight_gb = 2.6
+min_context = 32768
+german = true
+tools = true
+roles = ["baseline", "small", "agent"]
+cpu_stage = 1
+gpu_stage = 2
+cpu_priority = 20
+gpu_priority = 210
+source = "https://ollama.com/library/qwen3"
+
+[candidates."gemma3:4b"]
+display_name = "Gemma 3 4B"
+estimated_weight_gb = 3.3
+min_context = 32768
+german = true
+tools = true
+roles = ["multilingual", "small"]
+cpu_stage = 2
+gpu_stage = 2
+cpu_priority = 90
+gpu_priority = 220
+source = "https://ollama.com/library/gemma3"
+
+[candidates."ministral-3:8b"]
+display_name = "Ministral 3 8B"
+estimated_weight_gb = 6.0
+min_context = 65536
+german = true
+tools = true
+roles = ["german", "agent", "medium"]
+cpu_stage = 1
+gpu_stage = 2
+cpu_priority = 30
+gpu_priority = 190
+source = "https://ollama.com/library/ministral-3"
+
+[candidates."qwen3.5:9b"]
+display_name = "Qwen3.5 9B"
+estimated_weight_gb = 6.6
+min_context = 65536
+german = true
+tools = true
+roles = ["scaling", "german", "medium"]
+cpu_stage = 1
+gpu_stage = 1
+cpu_priority = 40
+gpu_priority = 10
+source = "https://ollama.com/library/qwen3.5"
+
+[candidates."gemma4:12b"]
+display_name = "Gemma 4 12B"
+estimated_weight_gb = 7.6
+min_context = 65536
+german = true
+tools = true
+roles = ["multilingual", "native-boundary", "vision"]
+cpu_stage = 2
+gpu_stage = 1
+cpu_priority = 70
+gpu_priority = 20
+source = "https://ollama.com/library/gemma4"
+
+[candidates."gemma4:e4b"]
+display_name = "Gemma 4 E4B"
+estimated_weight_gb = 9.6
+min_context = 65536
+german = true
+tools = true
+roles = ["moe", "native-boundary"]
+cpu_stage = 2
+gpu_stage = 1
+cpu_priority = 80
+gpu_priority = 40
+source = "https://ollama.com/library/gemma4"
+
+[candidates."ministral-3:14b"]
+display_name = "Ministral 3 14B"
+estimated_weight_gb = 9.1
+min_context = 65536
+german = true
+tools = true
+roles = ["scaling", "native-boundary", "german"]
+cpu_stage = 2
+gpu_stage = 1
+cpu_priority = 65
+gpu_priority = 30
+source = "https://ollama.com/library/ministral-3"
+
+[candidates."gpt-oss:20b"]
+display_name = "gpt-oss 20B"
+estimated_weight_gb = 14.0
+min_context = 65536
+german = true
+tools = true
+roles = ["reasoning", "offload", "agent"]
+cpu_stage = 2
+gpu_stage = 1
+cpu_priority = 50
+gpu_priority = 50
+source = "https://ollama.com/library/gpt-oss"
+
+[candidates."qwen3-coder:30b"]
+display_name = "Qwen3-Coder 30B-A3B"
+estimated_weight_gb = 19.0
+min_context = 65536
+german = true
+tools = true
+roles = ["coding", "offload", "moe"]
+cpu_stage = 3
+gpu_stage = 1
+cpu_priority = 60
+gpu_priority = 60
+source = "https://ollama.com/library/qwen3-coder"
+
+[candidates."qwen3.5:27b"]
+display_name = "Qwen3.5 27B"
+estimated_weight_gb = 17.0
+min_context = 65536
+german = true
+tools = true
+roles = ["dense-offload", "scaling"]
+cpu_stage = 0
+gpu_stage = 2
+cpu_priority = 999
+gpu_priority = 70
+source = "https://ollama.com/library/qwen3.5"
+
+[candidates."qwen3.6:35b"]
+display_name = "Qwen3.6 35B"
+estimated_weight_gb = 23.0
+min_context = 65536
+german = true
+tools = true
+roles = ["quality-ceiling", "offload", "vision"]
+cpu_stage = 0
+gpu_stage = 2
+cpu_priority = 999
+gpu_priority = 80
+source = "https://ollama.com/library/qwen3.6"
+
+[candidates."nemotron-3.5-lightning:30b-a3b"]
+display_name = "Nemotron 3.5 Lightning 30B-A3B"
+estimated_weight_gb = 20.0
+min_context = 65536
+german = true
+tools = true
+roles = ["always-on-agent", "offload", "moe"]
+cpu_stage = 2
+gpu_stage = 2
+cpu_priority = 100
+gpu_priority = 75
+source = "https://ollama.com/library/nemotron-3.5-lightning"

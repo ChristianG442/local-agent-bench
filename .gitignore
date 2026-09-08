@@ -1,0 +1,12 @@
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+.coverage
+dist/
+build/
+
+# Raw benchmark runs may contain host metadata. Publish only reviewed,
+# sanitized copies deliberately.
+results/
+*.jsonl

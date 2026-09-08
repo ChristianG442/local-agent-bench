@@ -1,0 +1,32 @@
+name = "always-on"
+catalog = "models.toml"
+
+models = [
+  "qwen3.5:4b",
+  "qwen3:4b",
+  "gemma3:4b",
+  "ministral-3:8b",
+  "qwen3.5:9b"
+]
+
+[host]
+id = "always-on-01"
+gpu_required = false
+
+[runtime]
+endpoint = "http://localhost:11434"
+
+[policy]
+suites = ["smoke", "german", "tools", "hermes_agent", "long_context"]
+contexts = [8192, 32768]
+quantizations = ["Q4_K_M"]
+kv_cache_types = ["f16", "q8_0", "q4_0"]
+performance_repeats = 2
+tool_repeats = 5
+temperature = 0.0
+seed = 42
+think = false
+max_ram_fraction = 0.70
+min_ollama_version = "0.13.0"
+hermes_max_stage = 4
+hermes_min_stage_score = 0.70

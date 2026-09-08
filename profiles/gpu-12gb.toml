@@ -1,0 +1,35 @@
+name = "gpu-12gb"
+catalog = "models.toml"
+
+models = [
+  "ministral-3:8b",
+  "ministral-3:14b",
+  "qwen3.5:9b",
+  "gemma4:12b",
+  "gemma4:e4b",
+  "gpt-oss:20b",
+  "qwen3-coder:30b",
+  "qwen3.5:27b",
+  "qwen3.6:35b"
+]
+
+[host]
+id = "gpu-12gb-01"
+gpu_required = true
+
+[runtime]
+endpoint = "http://localhost:11434"
+
+[policy]
+suites = ["smoke", "german", "tools", "hermes_agent", "long_context"]
+contexts = [8192, 32768, 65536]
+quantizations = ["detected"]
+kv_cache_types = ["f16", "q8_0", "q4_0"]
+performance_repeats = 3
+tool_repeats = 10
+temperature = 0.0
+seed = 42
+max_ram_fraction = 0.70
+min_ollama_version = "0.13.0"
+hermes_max_stage = 4
+hermes_min_stage_score = 0.70

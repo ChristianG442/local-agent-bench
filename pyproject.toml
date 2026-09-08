@@ -1,0 +1,16 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "local-agent-bench"
+version = "0.3.1"
+description = "Portable, hardware-aware Ollama benchmark for local LLM agents"
+requires-python = ">=3.11"
+dependencies = []
+
+[project.scripts]
+lab = "lab_bench.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]

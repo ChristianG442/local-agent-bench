@@ -1,0 +1,38 @@
+name = "quality-first"
+required_quality_suites = ["german", "tools", "hermes_agent", "long_context"]
+
+# Weights add up to 1. Quality keeps the original German/Tools/Long Context
+# split; measured efficiency breaks ties without hiding quality regressions.
+[weights]
+quality = 0.80
+generation_tokens_per_second = 0.08
+ttft_seconds = 0.03
+wall_seconds = 0.02
+ram_peak_mib = 0.02
+vram_peak_mib = 0.02
+model_size_mib = 0.03
+
+[quality]
+german = 0.35
+tools = 0.25
+hermes_agent = 0.35
+long_context = 0.05
+
+# A score of 1.0 means the measurement reaches this target. Lower is still
+# useful and is shown as a proportional efficiency value in `lab recommend`.
+[targets]
+generation_tokens_per_second = 30.0
+ttft_seconds = 2.0
+wall_seconds = 10.0
+ram_peak_mib = 12288.0
+vram_peak_mib = 10240.0
+model_size_mib = 12288.0
+
+# Gates are fail-closed when a configured measurement is unavailable.
+[gates]
+min_quality_score = 0.50
+min_hermes_agent_score = 0.70
+max_hermes_critical_failures = 0
+max_ttft_seconds = 60.0
+max_wall_seconds = 180.0
+max_capacity_failures = 0

@@ -1,0 +1,31 @@
+# Copy this file, choose a public-safe host ID and adapt the model list.
+name = "example-custom"
+catalog = "models.toml"
+
+models = [
+  "qwen3.5:4b",
+  "qwen3.5:9b"
+]
+
+[host]
+# Do not use an internal DNS name, employee name or device serial number.
+id = "cpu-reference"
+gpu_required = false
+
+[runtime]
+endpoint = "http://localhost:11434"
+
+[policy]
+suites = ["smoke", "german", "tools", "hermes_agent", "long_context"]
+contexts = [8192, 32768]
+quantizations = ["detected"]
+kv_cache_types = ["f16"]
+performance_repeats = 3
+tool_repeats = 5
+temperature = 0.0
+seed = 42
+think = false
+max_ram_fraction = 0.70
+min_ollama_version = "0.13.0"
+hermes_max_stage = 4
+hermes_min_stage_score = 0.70

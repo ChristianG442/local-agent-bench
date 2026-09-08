@@ -1,0 +1,35 @@
+name = "resource-constrained"
+required_quality_suites = ["german", "tools", "hermes_agent", "long_context"]
+
+[weights]
+quality = 0.40
+generation_tokens_per_second = 0.05
+ttft_seconds = 0.05
+wall_seconds = 0.05
+ram_peak_mib = 0.20
+vram_peak_mib = 0.15
+model_size_mib = 0.10
+
+[quality]
+german = 0.35
+tools = 0.25
+hermes_agent = 0.35
+long_context = 0.05
+
+[targets]
+generation_tokens_per_second = 20.0
+ttft_seconds = 3.0
+wall_seconds = 15.0
+ram_peak_mib = 8192.0
+vram_peak_mib = 8192.0
+model_size_mib = 8192.0
+
+[gates]
+min_quality_score = 0.60
+min_hermes_agent_score = 0.70
+max_hermes_critical_failures = 0
+max_ram_peak_mib = 12288.0
+max_vram_peak_mib = 11264.0
+max_model_size_mib = 12288.0
+max_wall_seconds = 120.0
+max_capacity_failures = 0
