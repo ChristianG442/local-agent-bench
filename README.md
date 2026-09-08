@@ -605,6 +605,37 @@ Semantikprüfung auf 71 %, der Hermes-Score auf 85 %; der echte VAT-Fehler, die
 fehlende Termin-Klärung, die falsche Abschlussbehauptung nach dem Terminal-
 Korrekturversuch und die Long-Context-Faktverschiebung bleiben negativ.
 
+**CPU-64k-Erweiterung 2026-09-08:** Zusätzlich liegen 2.364 valide Records aus
+14 Modellversuchen auf demselben anonymisierten 32-GB-CPU-Host vor. Die
+Tracks verwenden 65.536 Kontexttokens, KV-Cache `f16` und `think=false`.
+Zwei Preflight-Records besitzen erwartungsgemäß keine Run-ID; zwischen den
+eigentlichen Läufen gibt es keine Run-ID-Kollision. Jeder auswertbare
+64k-Track enthält mindestens einen real beobachteten Kapazitätsfehler und wird
+deshalb in allen drei Profilen durch `max_capacity_failures` ausgeschlossen.
+Die Scores bleiben als Diagnose sichtbar:
+
+| Modell | Quality-first | Interactive | Resource-constrained | Zusätzliche Beobachtung |
+|---|---:|---:|---:|---|
+| `gemma4:e4b` | 86 % | 63 % | 83 % | ein Timeout; zusätzlicher fehlgeschlagener Preflight-Record |
+| `ministral-3:8b` | 83 % | 58 % | 69 % | zwei Timeouts |
+| `qwen3:14b` | 79 % | 54 % | 66 % | drei Timeouts |
+| `qwen3.8:27b` | 78 % | 52 % | 57 % | drei Timeouts |
+| `qwen3.5:4b` | 77 % | 56 % | 71 % | Timeout und kritische Hermes-Fehler |
+| `qwen3.5:27b` | 76 % | 50 % | 56 % | drei Timeouts |
+| `ministral-3:14b` | 75 % | 53 % | 65 % | drei Timeouts |
+| `gemma4:12b` | 75 % | 51 % | 65 % | drei Timeouts |
+| `qwen3:8b` | 75 % | 53 % | 68 % | drei Timeouts |
+| `qwen3.5:9b` | 71 % | 49 % | 66 % | ein Timeout |
+| `gpt-oss:20b` | 61 % | 49 % | 54 % | Timeout; zusätzliche Qualitätsgates |
+| `qwen3:4b` | 54 % | 41 % | 62 % | zwei Timeouts; zusätzliche Qualitätsgates |
+| `qwen3-coder:30b` | 20 % | 29 % | 28 % | Runtime-Verbindung nach Disconnect weitgehend verloren |
+| `qwen3.5:35b-a3b` | 2 % | 0 % | 7 % | Preflight-Fehler, keine Pflichtsuiten |
+
+Diese Erweiterung ersetzt die vollständige 8k-CPU-Baseline nicht: Sie
+dokumentiert bewusst die 64k-Kapazitätsgrenze desselben Hosts. Die Profile
+bewerten einen hohen Qualitätsscore nicht als betriebsfähig, wenn der Track
+mindestens einen Kapazitätsfehler enthält.
+
 **Hermes-Nachprüfung 2026-09-03:** Die vollständigen Traces von sechs
 problematischen `ministral-3:8b`-Fällen zeigen drei reproduzierbare
 Benchmarkartefakte: informationsgleiche Suchquery-Erweiterungen wurden als
@@ -628,6 +659,12 @@ KV-Cache `f16` und `think=false`. Elf Modelle liefern auswertbare Tracks.
 der vorgesehenen adaptiven Hermes-Regel früher; ihre Dateien sind nicht
 abgeschnitten. Alle 2.094 Inferenzrecords enthalten RAM- und VRAM-Telemetrie.
 Der beobachtete VRAM-Peak liegt je nach Modell zwischen 5.210 und 10.974 MiB.
+
+Ein separater fehlerfreier GPU-Vergleich mit 776 Records bestätigt für
+`gemma4:e4b` und `qwen3.5:9b`, dass die fachlichen Ergebnisse bei 32.768 und
+65.536 Kontexttokens stabil bleiben. Die Profilwerte unterscheiden sich nur
+geringfügig; daraus wird keine zusätzliche allgemeine Modellrangliste
+abgeleitet.
 
 Die unveränderten GPU-Rohdaten ergeben mit Benchmark 0.3.1 und
 `--re-evaluate`:
@@ -665,8 +702,11 @@ Trennung ohne Änderung der Ausgangswerte:
 Kein geeigneter Track wird allein durch einen unbelegten Grenzwert
 ausgeschlossen, und eine Lockerung würde die beabsichtigte Modustrennung
 schwächen. Deshalb bleiben Zielwerte und Hard Gates aller drei Profile
-unverändert. Die Rohdateien beider Hosts bleiben unverändert und werden nicht
-synthetisch ergänzt oder zwischen Hosts umetikettiert.
+unverändert. Die zusätzlichen CPU-64k-Läufe bestätigen insbesondere, dass
+`max_capacity_failures = 0` nicht gelockert werden darf: hohe fachliche Scores
+kompensieren keinen instabilen Betriebsmodus. Die Rohdateien beider Hosts
+bleiben unverändert und werden nicht synthetisch ergänzt oder zwischen Hosts
+umetikettiert.
 
 ## Intelligentes Nachladen statt Brute Force
 
